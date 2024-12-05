@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afugentar Ratos</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./Leonardo_Phoenix_A_frantic_anthropomorphic_rat_with_beady_dark_0.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <h1>Afugentar de Roedores</h1>
+    <p>Defina a frequência em Hz usando o campo de entrada ou a barra deslizante e clique nos botões abaixo para iniciar
+        ou testar o som.</p>
+
+    <label for="frequency">Frequência (Hz):</label>
+    <input type="number" id="frequency" value="25000" min="20000" max="60000" step="1000">
+    <br>
+    <input type="range" id="frequency-slider" min="20000" max="60000" step="1000" value="25000">
+    <br>
+<div class="controls">
+    <button id="start-sound">Iniciar Som</button>
+    <button id="stop-sound">Parar Som</button>
+    <button id="test-sound">Teste 5 kHz</button>
+</div>
+
+    <p id="description">
+        Este é um gerador de som ultrassônico projetado para ajudar a afugentar ratos.
+        Os ratos possuem uma audição muito mais sensível do que a dos seres humanos,
+        especialmente em frequências acima de 20 kHz, que estão fora do nosso alcance auditivo.
+        Por isso, quando o som está ativo, você não conseguirá ouvi-lo, mas ele pode incomodar os ratos.
+    </p>
+    <p id="description">
+        O botão de teste de 5 kHz é uma forma de garantir que o sistema está funcionando corretamente,
+        já que esta frequência é audível para a maioria das pessoas. O som de teste é mais baixo e dura
+        apenas 1 segundo, para evitar desconforto auditivo.
+    </p>
+    <p id="description">
+        Observe que nem todos os dispositivos, como celulares ou laptops, conseguem reproduzir
+        frequências ultrassônicas. Para melhores resultados, utilize equipamentos com suporte
+        para frequências entre 20 kHz e 60 kHz.
+    </p>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.37/Tone.js"></script>
+    <script>
+        const startButton = document.getElementById('start-sound');
+        const stopButton = document.getElementById('stop-sound');
+        const testButton = document.getElementById('test-sound');
+        const frequencyInput = document.getElementById('frequency');
+        const frequencySlider = document.getElementById('frequency-slider');
+
+        let oscillator;
+
+        // Sincronizar barra deslizante e campo de entrada
+        frequencyInput.addEventListener('input', () => {
+            frequencySlider.value = frequencyInput.value;
+        });
+
+        frequencySlider.addEventListener('input', () => {
+            frequencyInput.value = frequencySlider.value;
+        });
+
+        // Iniciar som com a frequência definida pelo usuário
+        startButton.addEventListener('click', () => {
+            const frequency = parseInt(frequencyInput.value, 10) || 25000; // Padrão: 25 kHz
+            oscillator = new Tone.Oscillator(frequency, "sine").toDestination();
+            oscillator.start();
+        });
+
+        // Parar som
+        stopButton.addEventListener('click', () => {
+            if (oscillator) oscillator.stop();
+        });
+
+        // Testar som em 5 kHz com 80% do volume
+        testButton.addEventListener('click', () => {
+            const testOscillator = new Tone.Oscillator(5000, "sine").toDestination();
+            testOscillator.volume.value = -6; // 80% do volume máximo (-6 dB)
+            testOscillator.start();
+
+            // Parar automaticamente após 1 segundo
+            setTimeout(() => {
+                testOscillator.stop();
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
